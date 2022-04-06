@@ -34,6 +34,9 @@ int main(void) {
   A3 -> altura = 1.34;
 
   printf("\nATLETA 3\n%d, %.2f, %.2f", A3 -> idade, A3 -> peso, A3 -> altura);
-  
+
+  free(A1);
+  free(A2);
+  free(A3);
   return 0;
 }
