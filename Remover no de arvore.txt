@@ -1,0 +1,182 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct noArvore {
+ int valor;
+ struct noArvore* esquerda;
+ struct noArvore* direita;
+}no;
+
+//typedef struct noArvore no;
+
+void imprimePreOrdem(no* n){
+
+    if( n != NULL){
+        printf("%i ", n->valor);
+        imprimePreOrdem(n->esquerda);
+        imprimePreOrdem(n->direita);
+   }
+}
+
+void imprimeEmOrdem(no* n){
+
+    if( n != NULL){
+
+        imprimeEmOrdem(n->esquerda);
+        printf("%i ", n->valor);
+        imprimeEmOrdem(n->direita);
+   }
+}
+
+void imprimePosOrdem(no* n){
+
+    if( n != NULL){
+
+        imprimePosOrdem(n->esquerda);
+        imprimePosOrdem(n->direita);
+        printf("%i ", n->valor);
+   }
+}
+
+void buscarNo(no* n, int valorBuscado){
+	if (n != NULL){
+		if (valorBuscado == n->valor){
+			printf("\nValor encontrado");
+		}else if (valorBuscado < n->valor){
+			buscarNo(n->esquerda, valorBuscado);
+		}else if (valorBuscado > n->valor){
+			buscarNo(n->direita, valorBuscado);
+		}
+	}else{
+		printf("\n NAO ENCONTRADO");
+	}
+	
+}
+
+
+no* novoNo(int valor){
+	no* novo =  (no*) malloc(sizeof(no));
+	novo->valor = valor;
+	novo->esquerda = NULL;
+	novo->direita = NULL;
+	return novo;
+}
+
+no* inserirNo(no* n, int valor){
+	if (n == NULL){
+		n =  novoNo(valor);
+	}else if(n->valor == valor){
+		printf(" ELEMENTO DUPLICADO");
+		return n;
+	}else if (valor < n->valor){
+		if (n->esquerda == NULL){
+			n->esquerda =  novoNo(valor);	
+		}else{
+			inserirNo(n->esquerda, valor);
+		}
+	}else if(valor > n->valor){
+		if (n->direita == NULL){
+			n->direita =  novoNo(valor);	
+		}else{
+			inserirNo(n->direita, valor);
+		}
+	}
+	return n;
+}
+
+no* removerNo(no* n, no* pai, int valor){
+	if (n == NULL){
+		printf("\nARVORE VAZIA");
+	}else{
+		if (valor == n->valor){
+			if (pai == NULL){ // NO RAIZ
+				if(n->esquerda == NULL && n->direita == NULL){
+					printf("\n\nRAIZ SEM FILHO");
+					printf("\n EXCLUIR: %i ", valor);
+					n = NULL;
+				}else if(n->esquerda != NULL && n->direita != NULL){
+					printf("\n\nRAIZ DOIS FILHOS ");
+				}else if (n->esquerda != NULL){
+					pai = n->esquerda;
+				}else if (n->direita != NULL){
+					pai = n->direita;
+				}	
+			}else{// NAO RAIZ
+				printf("\n\n NO: %i - PAI: %i", n->valor, pai->valor);
+				if (n->esquerda == NULL && n->direita == NULL){
+					printf("\n\n REMOVER NO FOLHA");
+					if (n->valor < pai->valor){
+						pai->esquerda = NULL;
+					}else{
+						pai->direita = NULL;
+					}
+				}else if (n->esquerda != NULL && n->direita != NULL){
+					printf("\n DOIS FILHOS");
+				}else if(n->esquerda != NULL){
+					printf("\n FILHO ESQ");
+					pai->esquerda = n->esquerda;
+					free(n);
+				}else if (n->direita != NULL){
+					printf("\n FILHO DIR");
+					pai->direita = n->direita;
+					
+				}
+			  }
+		}else if (valor < n->valor){//NAO E O NO DESEJADO
+			removerNo(n->esquerda, n, valor);
+		}else if (valor > n->valor){
+			removerNo(n->direita, n, valor);	
+		}
+	}
+	return n;
+}
+
+void main(){
+	/*
+    no* n =  (no*) malloc(sizeof(no));
+	no* n1 = (no*) malloc(sizeof(no));
+	no* n2 = (no*) malloc(sizeof(no));
+	n->valor = 10;
+	n1->valor = 20;
+	n1->esquerda = NULL;
+	n1->direita = NULL;
+	
+	n2->valor = 30;	
+	n2->esquerda = NULL;
+	n2->direita = NULL;
+	
+	n->esquerda = n1;
+	n->direita = n2;
+	*/
+	no* n = NULL;
+	/*
+	n = inserirNo(n, 20);
+	n = inserirNo(n, 10);
+	n = inserirNo(n, 30);
+	n = inserirNo(n, 25);
+	n = inserirNo(n, 45);
+	n = inserirNo(n, 45);
+	printf("%i ", n->valor);
+    printf("\nPre-Ordem:");
+    imprimePreOrdem(n);
+     printf("\nEm-Ordem:");
+    imprimeEmOrdem(n);
+     printf("\nPos-Ordem:");
+    imprimePosOrdem(n);
+	buscarNo(n, 40);
+	*/
+
+	//n = inserirNo(n, 10);
+	//n = inserirNo(n, 15);
+	n = inserirNo(n, 10);
+	n = inserirNo(n, 8);
+	n = inserirNo(n, 2);
+	printf("\nPRE-ORDEM\n");
+	imprimePreOrdem(n);
+	n = removerNo(n,NULL, 8);
+
+	printf("\n\nPRE-ORDEM\n");
+	imprimePreOrdem(n);
+	free(n);
+
+}
